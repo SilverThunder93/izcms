@@ -8,7 +8,7 @@
 						if(empty($_POST['category'])) {
 							$errors[] = "category";
 						} else {
-							$cat_name = $_POST['category'];
+							$cat_name = mysqli_real_escape_string($dbc, strip_tags($_POST['category']));
 						}
 
 						if(isset($_POST['position']) && filter_var($_POST['position'], FILTER_VALIDATE_INT, array('min_range' =>1))) {
@@ -18,7 +18,7 @@
 						}
 
 						if(empty($errors)) { //Neu khong co loi xay ra thi chen vao CSDL
-						$q = "INSERT INTO categories (user_id, cat_name, position) VALUEs (1, '$cat_name', $position)";
+						$q = "INSERT INTO categories (user_id, cat_name, position) VALUEs (1, '{$cat_name}', $position)";
 						$r = mysqli_query($dbc, $q) or die("Query ($q) \n<br/> MySQL Error: " . mysqli_error($dbc));
 
 						if(mysqli_affected_rows($dbc) == 1) {
@@ -68,7 +68,7 @@
 
 									if(mysqli_num_rows($r) == 1) {
 										list($num) = mysqli_fetch_array($r, MYSQLI_NUM);
-										for($i=1; $i<=$num; $i++) {
+										for($i=1; $i<=$num+1; $i++) {//Tao vong lap cong them 1 cho position de chon dc position moi lon hon cho cat moi
 											echo "<option value='{$i}'>" . $i . "</option>";
 										}
 									}
