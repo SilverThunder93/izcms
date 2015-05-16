@@ -62,7 +62,17 @@
 								?>
 							</label>
 							<select name="position" tabindex="2">
-								<option value="1">1</option>
+								<?php 
+									$q = "SELECT count(cat_id) AS count FROM categories";
+									$r = mysqli_query($dbc, $q) or die("Query ($q) \n<br/> MySQL Error: " . mysqli_error($dbc));
+
+									if(mysqli_num_rows($r) == 1) {
+										list($num) = mysqli_fetch_array($r, MYSQLI_NUM);
+										for($i=1; $i<=$num; $i++) {
+											echo "<option value='{$i}'>" . $i . "</option>";
+										}
+									}
+								?>
 							</select>
 						</div>						
 					</fieldset>					
