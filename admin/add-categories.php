@@ -1,0 +1,73 @@
+<?php include('../includes/header.php'); ?>
+<?php include('../includes/mysql_connect.php'); ?>
+<?php include('../includes/sidebar-admin.php'); ?>		
+			
+			<?php
+					if($_SERVER['REQUEST_METHOD'] == 'POST') { //Gia tri ton tai, xu ly form
+						$errors = array();
+						if(empty($_POST['category'])) {
+							$errors[] = "category";
+						} else {
+							$cat_name = $_POST['category'];
+						}
+
+						if(isset($_POST['position']) && filter_var($_POST['position'], FILTER_VALIDATE_INT, array('min_range' =>1))) {
+							$position = $_POST['position'];
+						} else {
+							$errors[] = "position";
+						}
+
+						if(empty($errors)) { //Neu khong co loi xay ra thi chen vao CSDL
+						$q = "INSERT INTO categories (user_id, cat_name, position) VALUEs (1, '$cat_name', $position)";
+						$r = mysqli_query($dbc, $q) or die("Query ($q) \n<br/> MySQL Error: " . mysqli_error($dbc));
+
+						if(mysqli_affected_rows($dbc) == 1) {
+							$messages =  "<p class='success'>The category was added successfully.</p>";
+						} else {
+							$messages = "<p class='warning'>Could not added to the database due to a system error.</p>";
+						}
+					} else {
+						$messages = "<p class='warning'>Please fill all the required fields<p>";
+					}
+					}//End main IF submit condition
+				?>
+				
+			<div id="content">
+				<h2>Create a category</h2>
+				<?php
+					if(!empty($messages)){
+						echo $messages;
+					};
+				?>
+				<form id="add_cat" action="" method="post">
+					<fieldset>
+						<legend>Add category</legend>
+						<div>
+							<label for="category">Category Name: <span class="required">*</span>
+								<?php
+									if(isset($errors) && in_array('category', $errors)) {
+										echo "<p class='warning'>Please fill in the category name.</p>";
+									}
+								?>
+							</label>
+							<input type="text" name="category" id="category" value="" size="20" maxlength="150" tabindex="1" />
+						</div>
+						
+						<div>
+							<label for="position">Position: <span class="required">*</span>
+								<?php
+									if(isset($errors) and in_array('position', $errors)) {
+										echo "<p class='warning'>Please fill in the position.</p>";
+									}
+								?>
+							</label>
+							<select name="position" tabindex="2">
+								<option value="1">1</option>
+							</select>
+						</div>						
+					</fieldset>					
+					<p><input type="submit" name="submit" value="Add Category" /></p>
+				</form>
+			</div><!--end #content-->
+<?php include('../includes/sidebar-b.php'); ?>
+<?php include('../includes/footer.php'); ?>			
