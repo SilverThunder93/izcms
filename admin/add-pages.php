@@ -6,7 +6,7 @@
 				if($_SERVER['REQUEST_METHOD'] == 'POST') { //Gia tri ton tai, xu ly form
 					$errors = array();
 					if(empty($_POST['page_name'])) {//Kiem tra page_name co trong hay khong
-						$errors[] = 'position';
+						$errors[] = 'page_name';
 					} else {
 						$page_name = mysqli_real_escape_string($dbc, strip_tags($_POST['page_name']));
 					}
@@ -28,6 +28,18 @@
 					} else {
 						$content = mysqli_real_escape_string($dbc, $_POST['content']);
 					}
+
+					if (empty($errors)) { // Neu khong co loi thi chay cac lenh phia sau
+						$q = "INSERT INTO pages (user_id, cat_id, page_name, content, position, post_on) VALUES (1, {$cat_id}, '{$page_name}', '{$content}'. $position, NOW())";
+						$r = mysqli_query($dbc, $q) or die("Query ($q) \n<br/> MySQL Error: " . mysqli_error($dbc));
+						if (mysqli_affected_rows($dbc) == 1) {
+							$messages = "<p class='success'>The page was added successfully.</p>";
+						} else {
+							$messages = "<p class='warning'>The page was not added successfully.</p>";
+						}
+					} else {
+						$messages = "<p class='warning'>Please fill in all required fields</p>";
+					}
 				}//End main IF submit condition
 			?>
 				
@@ -39,26 +51,50 @@
 					<fieldset>
 						<legend>Add a Page</legend>
 						<div>
-							<lable for="page">Page Name: <span class="required">*</span></lable>
+							<lable for="page">Page Name: <span class="required">*</span>
+							<?php
+								if(isset($errors) && in_array('page_name', $errors)) {
+									echo "<p class='warning'>Please fill in the page name.</p>";
+								}
+							?>
+							</lable>
 							<input type="text" name="page_name" id="page_name" value="" size="20" maxlength="80" tabindex="1" />
 						</div>
 
 						<div>
-							<lable for="category">All categories: <span class="required">*</span></lable>
+							<lable for="category">All categories: <span class="required">*</span>
+							<?php
+								if(isset($errors) && in_array('category', $errors)) {
+									echo "<p class='warning'>Please fill in the category name.</p>";
+								}
+							?>
+							</lable>
 							<select name="category" >
 								<option value="">Select Category</option>		
 							</select>
 						</div>
 
 						<div>
-							<lable for="position">Position: <span class="required">*</span></lable>
+							<lable for="position">Position: <span class="required">*</span>
+							<?php
+								if(isset($errors) && in_array('position', $errors)) {
+									echo "<p class='warning'>Please pick position.</p>";
+								}
+							?>
+							</lable>
 							<select name="position" >
 								<option value="">Select position</option>		
 							</select>
 						</div>
 
 						<div>
-							<lable for="page-conttent">Page Content: <span class="required">*</span></lable>
+							<lable for="page-conttent">Page Content: <span class="required">*</span>
+							<?php
+								if(isset($errors) && in_array('content', $errors)) {
+									echo "<p class='warning'>Please fill in the content.</p>";
+								}
+							?>
+							</lable>
 							<textarea name="content" cols="50" rows="20"></textarea>
 						</div>
 					</fieldset>
