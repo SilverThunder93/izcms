@@ -3,21 +3,21 @@
 <?php include('../includes/sidebar-admin.php'); ?>		
 			
 			<?php
-					if($_SERVER['REQUEST_METHOD'] == 'POST') { //Gia tri ton tai, xu ly form
-						$errors = array();
-						if(empty($_POST['category'])) {
-							$errors[] = "category";
-						} else {
-							$cat_name = mysqli_real_escape_string($dbc, strip_tags($_POST['category']));
-						}
+				if($_SERVER['REQUEST_METHOD'] == 'POST') { //Gia tri ton tai, xu ly form
+					$errors = array();
+					if(empty($_POST['category'])) {
+						$errors[] = "category";
+					} else {
+						$cat_name = mysqli_real_escape_string($dbc, strip_tags($_POST['category']));
+					}
 
-						if(isset($_POST['position']) && filter_var($_POST['position'], FILTER_VALIDATE_INT, array('min_range' =>1))) {
-							$position = $_POST['position'];
-						} else {
-							$errors[] = "position";
-						}
+					if(isset($_POST['position']) && filter_var($_POST['position'], FILTER_VALIDATE_INT, array('min_range' =>1))) {
+						$position = $_POST['position'];
+					} else {
+						$errors[] = "position";
+					}
 
-						if(empty($errors)) { //Neu khong co loi xay ra thi chen vao CSDL
+					if(empty($errors)) { //Neu khong co loi xay ra thi chen vao CSDL
 						$q = "INSERT INTO categories (user_id, cat_name, position) VALUEs (1, '{$cat_name}', $position)";
 						$r = mysqli_query($dbc, $q) or die("Query ($q) \n<br/> MySQL Error: " . mysqli_error($dbc));
 
@@ -29,8 +29,8 @@
 					} else {
 						$messages = "<p class='warning'>Please fill all the required fields<p>";
 					}
-					}//End main IF submit condition
-				?>
+				}//End main IF submit condition
+			?>
 				
 			<div id="content">
 				<h2>Create a category</h2>
@@ -50,7 +50,7 @@
 									}
 								?>
 							</label>
-							<input type="text" name="category" id="category" value="" size="20" maxlength="150" tabindex="1" />
+							<input type="text" name="category" id="category" value="<?php if(isset($_POST['category'])) echo strip_tags($_POST['category']); ?>" size="20" maxlength="150" tabindex="1" />
 						</div>
 						
 						<div>
@@ -69,7 +69,9 @@
 									if(mysqli_num_rows($r) == 1) {
 										list($num) = mysqli_fetch_array($r, MYSQLI_NUM);
 										for($i=1; $i<=$num+1; $i++) {//Tao vong lap cong them 1 cho position de chon dc position moi lon hon cho cat moi
-											echo "<option value='{$i}'>" . $i . "</option>";
+											echo "<option value='{$i}'";
+												if(isset($_POST['position']) && $_POST['position'] == $i) echo "selected='selected'";
+											echo ">" . $i . "</option>";
 										}
 									}
 								?>
