@@ -70,7 +70,18 @@
 							?>
 							</lable>
 							<select name="category" >
-								<option value="">Select Category</option>		
+								<option value="">Select Category</option>
+								<?php 
+									$q = "SELECT cat_id, cat_name FROM categories ORDER BY position ASC";
+									$r = mysqli_query($dbc, $q);
+									if (mysqli_num_rows($r) > 0) {
+										while ($cats = mysqli_fetch_array($r, MYSQLI_NUM)) {
+											echo "<option value='{$cats[0]}'";
+												if (isset($_POST['category']) && ($_POST['category'] == $cats[0])) { echo "selected='selected"; }
+											echo ">" . $cats[1] . "</option>";
+										}
+									}
+								?>	
 							</select>
 						</div>
 
@@ -83,7 +94,19 @@
 							?>
 							</lable>
 							<select name="position" >
-								<option value="">Select position</option>		
+								<?php 
+									$q = "SELECT count(page_id) AS count FROM pages";
+									$r = mysqli_query($dbc, $q) or die("Query ($q) \n<br/> MySQL Error: " . mysqli_error($dbc));
+
+									if(mysqli_num_rows($r) == 1) {
+										list($num) = mysqli_fetch_array($r, MYSQLI_NUM);
+										for($i=1; $i<=$num+1; $i++) {//Tao vong lap cong them 1 cho position de chon dc position moi lon hon cho cat moi
+											echo "<option value='{$i}'";
+												if(isset($_POST['position']) && $_POST['position'] == $i) echo "selected='selected'";
+											echo ">" . $i . "</option>";
+										}
+									}
+								?>
 							</select>
 						</div>
 
