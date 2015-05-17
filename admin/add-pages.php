@@ -30,7 +30,7 @@
 					}
 
 					if (empty($errors)) { // Neu khong co loi thi chay cac lenh phia sau
-						$q = "INSERT INTO pages (user_id, cat_id, page_name, content, position, post_on) VALUES (1, {$cat_id}, '{$page_name}', '{$content}'. $position, NOW())";
+						$q = "INSERT INTO pages (user_id, cat_id, page_name, content, position, post_on) VALUES (1, {$cat_id}, '{$page_name}', '{$content}', $position, NOW())";
 						$r = mysqli_query($dbc, $q) or die("Query ($q) \n<br/> MySQL Error: " . mysqli_error($dbc));
 						if (mysqli_affected_rows($dbc) == 1) {
 							$messages = "<p class='success'>The page was added successfully.</p>";
@@ -62,28 +62,29 @@
 						</div>
 
 						<div>
-							<lable for="category">All categories: <span class="required">*</span>
-							<?php
-								if(isset($errors) && in_array('category', $errors)) {
-									echo "<p class='warning'>Please fill in the category name.</p>";
-								}
-							?>
-							</lable>
-							<select name="category" >
-								<option value="">Select Category</option>
-								<?php 
-									$q = "SELECT cat_id, cat_name FROM categories ORDER BY position ASC";
-									$r = mysqli_query($dbc, $q);
-									if (mysqli_num_rows($r) > 0) {
-										while ($cats = mysqli_fetch_array($r, MYSQLI_NUM)) {
-											echo "<option value='{$cats[0]}'";
-												if (isset($_POST['category']) && ($_POST['category'] == $cats[0])) { echo "selected='selected"; }
-											echo ">" . $cats[1] . "</option>";
-										}
-									}
-								?>	
-							</select>
-						</div>
+	                        <label for="category">All categories: <span class="required">*</span>
+	                            <?php 
+	                                if(isset($errors) && in_array('category', $errors)) {
+	                                    echo "<p class='warning'>Please pick a category</p>";
+	                                }
+	                            ?>
+	                        </label>
+	                        
+	                        <select name="category">
+	                            <option>Select Category</option>
+	                            <?php
+	                                $q = "SELECT cat_id, cat_name FROM categories ORDER BY position ASC";
+	                                $r = mysqli_query($dbc, $q);
+	                                if(mysqli_num_rows($r) > 0) {
+	                                    while($cats = mysqli_fetch_array($r, MYSQLI_NUM)) {
+	                                        echo "<option value='{$cats[0]}'";
+	                                            if(isset($_POST['category']) && ($_POST['category'] == $cats[0])) echo "selected='selected'";
+	                                        echo ">".$cats[1]."</option>";
+	                                    }
+	                                }
+	                            ?>
+	                        </select>
+	                    </div>
 
 						<div>
 							<lable for="position">Position: <span class="required">*</span>
@@ -111,15 +112,15 @@
 						</div>
 
 						<div>
-							<lable for="page-conttent">Page Content: <span class="required">*</span>
-							<?php
-								if(isset($errors) && in_array('content', $errors)) {
-									echo "<p class='warning'>Please fill in the content.</p>";
-								}
-							?>
-							</lable>
-							<textarea name="content" cols="50" rows="20"></textarea>
-						</div>
+	                        <label for="page-content">Page Content: <span class="required">*</span>
+	                            <?php 
+	                                if(isset($errors) && in_array('content', $errors)) {
+	                                    echo "<p class='warning'>Please fill in the content</p>";
+	                                }
+	                            ?>
+	                        </label>
+	                        <textarea name="content" cols="50" rows="20"><?php if(isset($_POST['content'])) echo htmlentities($_POST['content'], ENT_COMPAT, 'UTF-8'); ?></textarea>)
+	                    </div>
 					</fieldset>
 
 					<p><input type="submit" name="submit" value="Add Page" /></p>
