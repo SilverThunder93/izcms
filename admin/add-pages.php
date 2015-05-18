@@ -58,7 +58,7 @@
 								}
 							?>
 							</lable>
-							<input type="text" name="page_name" id="page_name" value="" size="20" maxlength="80" tabindex="1" />
+							<input type="text" name="page_name" id="page_name" value="<?php if(isset($_POST['page_name'])) echo strip_tags($_POST['page_name']); ?>" size="20" maxlength="80" tabindex="1" />
 						</div>
 
 						<div>
