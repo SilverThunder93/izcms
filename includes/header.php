@@ -9,7 +9,7 @@
 <body>
 	<div id="container">
 		<div id="header" class="">
-			<h1><a href="#">izCMS</a></h1>
+			<h1><a href="http://localhost/izcms/index.php">izCMS</a></h1>
 			<p class="slogan">The iz Content Manament System</p>
 		</div><!-- #header -->
 

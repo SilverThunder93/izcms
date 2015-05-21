@@ -4,33 +4,33 @@
 <?php include('../includes/sidebar-admin.php'); ?>		
 <div id="content">
     <?php 
-        if (isset($_GET['cid'], $_GET['cat_name']) && filter_var($_GET['cid'], FILTER_VALIDATE_INT, array('min_range' => 1))) {
-            $cid = $_GET['cid'];
-            $cat_name = $_GET['cat_name'];
-            //Neu ton tai cid va cat_name thì se xoa category khoi co so du lieu
+        if (isset($_GET['pid'], $_GET['pn']) && filter_var($_GET['pid'], FILTER_VALIDATE_INT, array('min_range' => 1))) {
+            $pid = $_GET['pid'];
+            $page_name = $_GET['pn'];
+            //Neu ton tai pid va page_name thì se xoa category khoi co so du lieu
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if (isset($_POST['delete']) && ($_POST['delete'] == 'yes')) { //Neu muon delete categories
-                    $q = "DELETE FROM categories WHERE cat_id = {$cid} LIMIT 1";
+                    $q = "DELETE FROM pages WHERE page_id = {$pid} LIMIT 1";
                     $r = mysqli_query($dbc, $q);
                         confirm_query($r, $q);
-                    if(mysqli_affected_rows($dbc) == 1) {
-                        $message = "<p class='success'>The category was deleted successfully.</p>";
+                    if(mysqli_affected_rows($dbc) == 1) {//Xoa thanh cong -> bao nguoi dung biet
+                        $message = "<p class='success'>The page was deleted successfully.</p>";
                     } else {
-                        $message = "<p class='warning'>The category was not deleted due to a system error.</p>";
+                        $message = "<p class='warning'>The oage was not deleted due to a system error.</p>";
                     }
-                } else {
+                } else {//Neu khong muon delete
                     $message = "<p class='warning'>I thought so to!!! Shouldn't be deleted.</p>";
                 }
             }
-        } else {//Neu cid va cat_name k ton tai hoac khong dung dinh dang
-            redirect_to('admin/view_categories.php');
+        } else {//Neu pid va page_name k ton tai hoac khong dung dinh dang
+            redirect_to('admin/view_pages.php');
         }
     ?>
-    <h2>Delete Category: <?php if (isset($cat_name)) { echo htmlentities($cat_name, ENT_COMPAT, 'UTF-8'); } ?></h2>
+    <h2>Delete Page: <?php if (isset($page_name)) { echo htmlentities($page_name, ENT_COMPAT, 'UTF-8'); } ?></h2>
     <?php if (!empty($message)) { echo $message; }?>
     <form action="" method="post">
         <fieldset>
-            <legend>Delete Category</legend>
+            <legend>Delete Page</legend>
             <label for="delete">Are you sure?</label>
             <div>
                 <input type="radio" name="delete" value="no" checked="checked" /> No

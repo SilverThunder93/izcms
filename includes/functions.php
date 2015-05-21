@@ -16,4 +16,7 @@
     	header("Location: $url");
 		exit();
     }
-?>
+
+    function the_excerpt($text) {
+        return substr($text, 0, strrpos($text, ' '));
+    }
