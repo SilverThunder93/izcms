@@ -1,5 +1,7 @@
-<?php include('../includes/header.php'); ?>
-<?php include('../includes/sidebar-admin.php'); ?>		
+<?php 
+	include('../includes/header.php');
+	include('../includes/sidebar-admin.php'); 
+?>		
 <div id="content">
 	<h2>Wellcome To izCMS Admin Control Panel</h2>
 	<div>
@@ -12,5 +14,7 @@
 		proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 	</div>
 </div><!--end #content-->
-<?php include('../includes/sidebar-b.php'); ?>
-<?php include('../includes/footer.php'); ?>			
+<?php 
+    include('../includes/sidebar-b.php'); 
+    include('../includes/footer.php'); 
+?>		

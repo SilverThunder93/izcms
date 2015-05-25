@@ -1,7 +1,9 @@
-<?php include('../includes/header.php'); ?>
-<?php include('../includes/mysql_connect.php'); ?>
-<?php include('../includes/functions.php');?>
-<?php include('../includes/sidebar-admin.php'); ?>		
+<?php 
+    include('../includes/header.php');
+    include('../includes/mysql_connect.php');
+    include('../includes/functions.php');
+    include('../includes/sidebar-admin.php'); 
+?>		
 <div id="content">
 <h2>Manage Pages</h2>
     <table>
@@ -56,7 +58,7 @@
                             <td>{$pages['page_name']}</td>
                             <td>{$pages['date']}</td>
                             <td>{$pages['name']}</td>
-                            <td>{$pages['content']}</td>
+                            <td>" . the_excerpt($pages['content']) . "</td>
                             <td><a class='edit' href='edit_page.php?pid={$pages['page_id']}'>Edit</a></td>
                             <td><a class='delete' href='delete_page.php?pid={$pages['page_id']}&pn={$pages['page_name']}'>Delete</a></td>
                         </tr>
@@ -71,5 +73,7 @@
     	</tbody>
     </table>
 </div><!--end content-->
-<?php include('../includes/sidebar-b.php'); ?>
-<?php include('../includes/footer.php'); ?>
+<?php 
+    include('../includes/sidebar-b.php'); 
+    include('../includes/footer.php'); 
+?>

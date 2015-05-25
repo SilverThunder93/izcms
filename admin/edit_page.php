@@ -1,7 +1,9 @@
-<?php include('../includes/header.php'); ?>
-<?php include('../includes/mysql_connect.php'); ?>
-<?php include('../includes/functions.php');?>
-<?php include('../includes/sidebar-admin.php'); ?>		
+<?php 
+    include('../includes/header.php');
+    include('../includes/mysql_connect.php'); 
+    include('../includes/functions.php');
+    include('../includes/sidebar-admin.php'); 
+?>		
 
 <?php
 	if (isset($_GET['pid']) && filter_var($_GET['pid'], FILTER_VALIDATE_INT, array('min_range' => 1))) {
@@ -159,5 +161,7 @@
 		<p><input type="submit" name="submit" value="Save change" /></p>
 	</form>
 </div><!--end #content-->
-<?php include('../includes/sidebar-b.php'); ?>
-<?php include('../includes/footer.php'); ?>			
+<?php 
+    include('../includes/sidebar-b.php'); 
+    include('../includes/footer.php'); 
+?>		

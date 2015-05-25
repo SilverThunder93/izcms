@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>SilverThunder</title>
+	<title>izCMS - <?php echo (isset($title)) ? $title : "My home page" ?></title>
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>

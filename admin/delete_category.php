@@ -1,11 +1,12 @@
-<?php include('../includes/header.php'); ?>
-<?php include('../includes/mysql_connect.php'); ?>
-<?php include('../includes/functions.php');?>
-<?php include('../includes/sidebar-admin.php'); ?>		
+<?php 
+    include('../includes/header.php');
+    include('../includes/mysql_connect.php'); 
+    include('../includes/functions.php');
+    include('../includes/sidebar-admin.php'); 
+?>  
 <div id="content">
     <?php 
-        if (isset($_GET['cid'], $_GET['cat_name']) && filter_var($_GET['cid'], FILTER_VALIDATE_INT, array('min_range' => 1))) {
-            $cid = $_GET['cid'];
+        if($pid = validate_id($_GET['cid'])) {
             $cat_name = $_GET['cat_name'];
             //Neu ton tai cid va cat_name thì se xoa category khoi co so du lieu
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -42,5 +43,7 @@
         </fieldset>
     </form>
 </div><!--end content-->
-<?php include('../includes/sidebar-b.php'); ?>
-<?php include('../includes/footer.php'); ?>
+<?php 
+    include('../includes/sidebar-b.php'); 
+    include('../includes/footer.php'); 
+?>

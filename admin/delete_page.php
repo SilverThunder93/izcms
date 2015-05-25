@@ -1,11 +1,13 @@
-<?php include('../includes/header.php'); ?>
-<?php include('../includes/mysql_connect.php'); ?>
-<?php include('../includes/functions.php');?>
-<?php include('../includes/sidebar-admin.php'); ?>		
+<?php 
+    include('../includes/header.php');
+    include('../includes/mysql_connect.php'); 
+    include('../includes/functions.php');
+    include('../includes/sidebar-admin.php'); 
+?>		
+     
 <div id="content">
     <?php 
-        if (isset($_GET['pid'], $_GET['pn']) && filter_var($_GET['pid'], FILTER_VALIDATE_INT, array('min_range' => 1))) {
-            $pid = $_GET['pid'];
+        if($pid = validate_id($_GET['pid'])) {
             $page_name = $_GET['pn'];
             //Neu ton tai pid va page_name thì se xoa category khoi co so du lieu
             if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -42,5 +44,7 @@
         </fieldset>
     </form>
 </div><!--end content-->
-<?php include('../includes/sidebar-b.php'); ?>
-<?php include('../includes/footer.php'); ?>
+<?php 
+    include('../includes/sidebar-b.php'); 
+    include('../includes/footer.php'); 
+?>

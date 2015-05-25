@@ -1,7 +1,9 @@
-<?php include('../includes/header.php'); ?>
-<?php include('../includes/mysql_connect.php'); ?>
-<?php include('../includes/functions.php');?>
-<?php include('../includes/sidebar-admin.php'); ?>		
+<?php 
+	include('../includes/header.php'); 
+	include('../includes/mysql_connect.php'); 
+	include('../includes/functions.php');
+	include('../includes/sidebar-admin.php'); 
+?>		
 			
 <?php
 	if($_SERVER['REQUEST_METHOD'] == 'POST') { //Gia tri ton tai, xu ly form
@@ -84,5 +86,7 @@
 		<p><input type="submit" name="submit" value="Add Category" /></p>
 	</form>
 </div><!--end #content-->
-<?php include('../includes/sidebar-b.php'); ?>
-<?php include('../includes/footer.php'); ?>			
+<?php 
+	include('../includes/sidebar-b.php'); 
+	include('../includes/footer.php'); 
+?>			
