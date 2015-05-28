@@ -24,7 +24,7 @@
 		}
 
 		//Validate captcha
-		if (isset($_POST['captcha']) && trim($_POST['captcha']) != 5) {
+		if (isset($_POST['captcha']) && trim($_POST['captcha']) != $_SESSION['q']['answer']) {
 			$errors[] = "wrong";
 		}
 
@@ -45,6 +45,30 @@
 	}//End Main IF
 ?>
 
+<?php 
+	//Display comment from database
+	$q = "SELECT author, comment, DATE_FORMAT(comment_date, ' %d %d, %Y') AS date FROM comments WHERE page_id = {$pid}";
+	 $r = mysqli_query($dbc, $q);
+	 confirm_query($r, $q);
+
+	 if (mysqli_num_rows($r) > 0) {//Neu co comment se hien thi ra
+	 	echo "<ol id='disscuss'>";
+	 	while (list($author, $comment, $date) = mysqli_fetch_array($r, MYSQLI_NUM)) {
+	 		echo "<li>
+				<p class='author'>{$author}</p>
+				<p class='comment-sec'>{$comment}</p>
+				<p class='date'>{$date}</p>";
+			echo "</li>";
+	 	} //End WHILE 	
+	 	echo "</ol>";
+	 } else {//End IF
+	 	echo "<h2>Be the first leave comment</h2>";
+	 }
+?>
+
+<?php 
+	if (!empty($messages)) {echo $messages;}
+?>
 <form id="comment_form" action="" method="post" >
 	<fieldset>
 		<legend>Leave a comment</legend><div>
@@ -81,7 +105,7 @@
 		</div>
 
 		<div>
-			<label for="captcha">Answer question: four plus one <span class="required">*</span>
+			<label for="captcha">Enter number only, please! <?php echo captcha(); ?><span class="required">*</span>
 				<?php 
 					if (isset($errors) && in_array('wrong', $errors)) {
 						echo "<span class='warning'>Please enter correct answer.</span>";

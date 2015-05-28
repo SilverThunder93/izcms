@@ -61,3 +61,22 @@
         return $result;
     }
 
+    function captcha() {
+        $qna = array (
+                1 => array('question' => 'Mot cong mot', 'answer' => 2),
+                2 => array('question' => 'ba tru hai', 'answer' => 1),
+                3 => array('question' => 'ba nhan nam', 'answer' => 15),
+                4 => array('question' => 'sau chia hai', 'answer' => 3),
+                5 => array('question' => 'nang bach tuyet va .... chu lun', 'answer' => 7),
+                6 => array('question' => 'Alibaba va ... ten cuop', 'answer' => 40),
+                7 => array('question' => 'an mot qua khe, tra .... cuc vang', 'answer' => 1),
+                8 => array('question' => 'may tui .... gang, mang di ma dung', 'answer' => 3)
+                );
+        $rand_key =array_rand($qna); //Lay ngau nhien 1 key trong array
+        $_SESSION['q'] = $qna[$rand_key];
+        return $question = $qna[$rand_key]['question'];
+    }//End function captcha
+
+ 
+
+   
