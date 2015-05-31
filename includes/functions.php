@@ -77,6 +77,62 @@
         return $question = $qna[$rand_key]['question'];
     }//End function captcha
 
- 
-
-   
+    function pagination($aid, $display = 4){
+        global $dbc; global $start;
+        if(isset($_GET['p']) && filter_var($_GET['p'], FILTER_VALIDATE_INT, array('min_range' => 1))) {
+            $page = $_GET['p'];
+        } else {
+            // Nếu biến p không có, sẽ truy vấn CSDL để tìm xem có bao nhiêu page để hiển thị
+            $q = "SELECT COUNT(page_id) FROM pages";
+            $r = mysqli_query($dbc, $q);
+            confirm_query($r, $q);
+            list($record) = mysqli_fetch_array($r, MYSQLI_NUM);
+            
+            // Tìm số trang bằng cách chia số dữ liệu cho số display
+            if($record > $display) {
+                $page = ceil($record/$display);
+            } else {
+                $page = 1;
+            }
+        }
+        
+        $output = "<ul class='pagination'>";
+        if($page > 1) {
+            $current_page = ($start/$display) + 1;
+            
+            // Nếu không phải ở trang đầu (hoặc 1) thì sẽ hiển thị Trang trước.
+            if($current_page != 1) {
+                $output .= "<li><a href='author.php?aid={$aid}&s=".($start - $display)."&p={$page}'>Previous</a></li>";
+            }
+            
+            // Hiển thị những phần số còn lại của trang
+            for($i = 1; $i <= $page; $i++) {
+                if($i != $current_page) {
+                    $output .= "<li><a href='author.php?aid={$aid}&s=".($display * ($i - 1))."&p={$page}'>{$i}</a></li>";
+                } else {
+                    $output .= "<li class='current'>{$i}</li>";
+                }
+            }// END FOR LOOP
+            
+            // Nếu không phải trang cuối, thì hiển thị trang kế.
+            if($current_page != $page) {
+                $output .= "<li><a href='author.php?aid={$aid}&s=".($start + $display)."&p={$page}'>Next</a></li>";
+            }
+        } // END pagination section
+            $output .= "</ul>";
+            
+            return $output;
+    } // END pagination  
+	
+	function clean_email($value) {
+        $suspects = array('to:', 'bcc:','cc:','content-type:','mime-version:', 'multipart-mixed:','content-transfer-encoding:');
+        foreach ($suspects as $s) {
+            if(strpos($value, $s) !== FALSE) {
+                return '';
+            }
+            // Tra ve gia tri cho dau xuong hang
+            $value = str_replace(array('\n', '\r', '%0a', '%0d'), '', $value);
+            return trim($value);
+        }
+    }   
+	
