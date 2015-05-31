@@ -1,5 +1,5 @@
 <?php $title = ''; include('includes/header.php');?>
-<?php include('includes/mysqli_connect.php');?>
+<?php include('includes/mysql_connect.php');?>
 <?php include('includes/functions.php');?>
 <?php include('includes/sidebar-a.php'); ?>
 <div id="content">
