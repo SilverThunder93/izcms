@@ -1,68 +1,117 @@
 <?php
     // Xac dinh hang so cho dia chi tuyet doi
     define('BASE_URL', 'http://localhost/izcms/');
-
-	//Kiem tra ket qua tra ve co dung hay khong    
+    define('LIVE', FALSE); // FALSE la dang trong qua trinh phat trien | TRUE la dang trong production
+    // Kiem tra xem ket qua tra ve co dung hay khong?
     function confirm_query($result, $query) {
         global $dbc;
-        if(!$result) {
+        if(!$result && !LIVE) {
             die("Query {$query} \n<br/> MySQL Error: " .mysqli_error($dbc));
         } 
     }
 
-    //Tai dinh huong neu khong co dia chi
-    function redirect_to($page = 'index.php') {
-    	$url = BASE_URL . $page;
-    	header("Location: $url");
-		exit();
-    }
+    // Tao function de bao loi rieng
+    function custom_error_handler($e_number, $e_message, $e_files, $e_line, $e_vars) {
+        // Tao ra mot cau bao loi rieng
+        $message = "<p class='warning'>Có lỗi xảy ra ở file {$e_files} tại dòng {$e_line}: {$e_message} \n";
+        //$message .= print_r($e_vars, 1);
 
-    //Cat chu hien thi thanh doan van ngan
-    function the_excerpt($text) {
+        if(!LIVE) {
+            // Dang trong qua trinh phat trien, in loi chi tiet va cu the
+            echo "<pre>". $message ."</pre><br/>\n";
+        } else {
+            // Dang o trong qua trinh production, va live tren host
+            echo "<p class='warning'>Oops! something went wrong, we are so sorry for the inconvenice.</p>";
+        }
+    }// End custom_error_handler
+
+    // use our custom handler
+    set_error_handler('custom_error_handler');
+
+    // Kiem tra xem nguoi dung da dang nhap hay chua?
+    function is_logged_in() {
+        if(!isset($_SESSION['uid'])) {
+            redirect_to('login.php');
+        }
+    } // END is_logged_in
+        
+    // Tai dinh huong nguoi dung ve trang mac dinh la index
+    function redirect_to($page = 'index.php') {
+        $url = BASE_URL . $page;
+        header("Location: $url");
+        exit();
+    }
+    
+    // Ham nay de thong bao loi
+    function report_error($mgs) {
+        if(isset($mgs)) {
+            foreach ($mgs as $m) {
+                echo $m;
+            }
+        }
+    } // END report_error
+       
+    // Cat chu~ de hien thi thanh doan van ngan.
+    function the_excerpt($text, $string = 400) {
         $sanitized = htmlentities($text, ENT_COMPAT, 'UTF-8');
-        if(strlen($sanitized) > 400) {
-            $cutString = substr($sanitized, 0, 400);
+        if(strlen($sanitized) > $string) {
+            $cutString = substr($sanitized,0,$string);
             $words = substr($sanitized, 0, strrpos($cutString, ' '));
             return $words;
         } else {
             return $sanitized;
         }
-    }
-
-    //Tao paragraph tu CSDL
+       
+    } // End the_excerpt
+    
+    // Tao paragraph tu CSDL
     function the_content($text) {
         $sanitized = htmlentities($text, ENT_COMPAT, 'UTF-8');
-        return str_replace(array("\r\n", "\n"), array("<p>", "</p>"), $sanitized);
+        return str_replace(array("\r\n", "\n"),array("<p>", "</p>"),$sanitized);
     }
+    
+    // Ham tao ra de kiem tra xem co phai la admin hay khong
+    function is_admin() {
 
-    //Kiem tra $id co phai dang so hay khong
+        return isset($_SESSION['user_level']) && ($_SESSION['user_level'] == 2);
+    }
+    
+    // Kiem tra xem nguoi dung co the vao trang admin hay khong?
+    function admin_access() {
+        if(!is_admin()) {
+            redirect_to();
+        }
+    }
+    
+    // Kiem tra xem $id co hop le, la dang so hay khong?
     function validate_id($id) {
-        if (isset($id) && filter_var($id, FILTER_VALIDATE_INT, array('min_range' => 1))) {
+        if(isset($id) && filter_var($id, FILTER_VALIDATE_INT, array('min_range' =>1))) {
             $val_id = $id;
             return $val_id;
         } else {
             return NULL;
         }
-    }//End validate_id
-
-    //Truy van CSDL de lay post va thong ti nguoi dung
+    } // End validate_id
+    
+    // Truy van CSDL de lay post va thong tin nguoi dung.
     function get_page_by_id($id) {
         global $dbc;
-        $q = " SELECT p.page_id, p.page_name, p.content, ";
-        $q .= " DATE_FORMAT(p.post_on, '%b %d %Y') AS date, ";
+        $q = " SELECT p.page_name, p.page_id, p.content,"; 
+        $q .= " DATE_FORMAT(p.post_on, '%b %d, %y') AS date, ";
         $q .= " CONCAT_WS(' ', u.first_name, u.last_name) AS name, u.user_id ";
         $q .= " FROM pages AS p ";
         $q .= " INNER JOIN users AS u ";
-        $q .= " USING(user_id) ";
-        $q .= " WHERE p.page_id={$id} ";
-        $q .= " ORDER BY date ASC LIMIT 1 ";
-        $result = mysqli_query($dbc, $q);
-            confirm_query($result, $q);
+        $q .= " USING (user_id) ";
+        $q .= " WHERE p.page_id={$id}";
+        $q .= " ORDER BY date ASC LIMIT 1";
+        $result = mysqli_query($dbc,$q);
+        confirm_query($result, $q);
         return $result;
-    }
-
+    } // End get_page_by_id
+    
+    // Ham dung chong spam trong form
     function captcha() {
-        $qna = array (
+        $qna = array(
                 1 => array('question' => 'Mot cong mot', 'answer' => 2),
                 2 => array('question' => 'ba tru hai', 'answer' => 1),
                 3 => array('question' => 'ba nhan nam', 'answer' => 15),
@@ -72,11 +121,12 @@
                 7 => array('question' => 'an mot qua khe, tra .... cuc vang', 'answer' => 1),
                 8 => array('question' => 'may tui .... gang, mang di ma dung', 'answer' => 3)
                 );
-        $rand_key =array_rand($qna); //Lay ngau nhien 1 key trong array
+        $rand_key = array_rand($qna); // Lay ngau nhien mot trong cac array 1, 2, 4
         $_SESSION['q'] = $qna[$rand_key];
         return $question = $qna[$rand_key]['question'];
-    }//End function captcha
-
+    } // END function captcha
+    
+    // Phan trang
     function pagination($aid, $display = 4){
         global $dbc; global $start;
         if(isset($_GET['p']) && filter_var($_GET['p'], FILTER_VALIDATE_INT, array('min_range' => 1))) {
@@ -123,8 +173,9 @@
             
             return $output;
     } // END pagination  
-	
-	function clean_email($value) {
+    
+    // Ham de chong spam email
+    function clean_email($value) {
         $suspects = array('to:', 'bcc:','cc:','content-type:','mime-version:', 'multipart-mixed:','content-transfer-encoding:');
         foreach ($suspects as $s) {
             if(strpos($value, $s) !== FALSE) {
@@ -134,5 +185,5 @@
             $value = str_replace(array('\n', '\r', '%0a', '%0d'), '', $value);
             return trim($value);
         }
-    }   
-	
+    }
+     

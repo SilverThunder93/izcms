@@ -1,4 +1,4 @@
-<?php session_start(); ?>
+<?php session_start();?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,7 +10,7 @@
 <body>
 	<div id="container">
 		<div id="header" class="">
-			<h1><a href="index.php">izCMS</a></h1>
+			<h1><a href="http://localhost/izcms/index.php">izCMS</a></h1>
 			<p class="slogan">The iz Content Manament System</p>
 		</div><!-- #header -->
 
@@ -22,5 +22,5 @@
 				<li><a href="contact.php" title="">Contact us</a></li>
 			</ul>
 			
-			<p class="greeting">Xin chào bạn hiền </p>
+			<p class="greeting">Xin chào <?php echo (isset($_SESSION['first_name'])) ? $_SESSION['first_name'] : "bạn hiền!"; ?></p>
 		</div><!-- end #navigation -->

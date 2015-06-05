@@ -1,6 +1,7 @@
 <?php 
 	include('../includes/header.php');
-	include('../includes/sidebar-admin.php'); 
+	include('../includes/sidebar-admin.php');
+    include('../includes/functions.php');
 ?>		
 <div id="content">
 	<h2>Wellcome To izCMS Admin Control Panel</h2>
@@ -15,6 +16,6 @@
 	</div>
 </div><!--end #content-->
 <?php 
-    include('../includes/sidebar-b.php'); 
-    include('../includes/footer.php'); 
+	include('../includes/sidebar-b.php'); 
+	include('../includes/footer.php'); 
 ?>		
